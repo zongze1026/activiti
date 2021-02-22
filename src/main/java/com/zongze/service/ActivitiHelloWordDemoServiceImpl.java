@@ -34,15 +34,21 @@ public class ActivitiHelloWordDemoServiceImpl implements ActivitiHelloWordDemoSe
 
     @Override
     public void startProcess(String processKey) {
+        String deployMentKey = "请假审批";
         //1.部署bpm文件
         Deployment deployment = repositoryService.createDeployment()
+                .key(deployMentKey)
+                .name("请假名称")
+                .category("请假类")
                 .addClasspathResource("activiti.bpmn")
                 .addClasspathResource("activiti.png")
                 .deploy();
+        log.info("流程部署成功，key=%s,id=%s,name=%s,category=%s", deployment.getKey(), deployment.getId(), deployment.getName(), deployment.getCategory());
 
 
         //2.获取流程定义
         List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).list();
+//        List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().
         log.info("获取到的流程定义的数量：{}", list.size());
         list.stream().forEach(d -> {
             log.info("流程定义的id:{},流程定义的key:{}", d.getId(), d.getKey());
@@ -50,12 +56,25 @@ public class ActivitiHelloWordDemoServiceImpl implements ActivitiHelloWordDemoSe
 
 
         //3.开启流程实例
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(list.get(0).getKey());
-        log.info("开启一个流程实例，id:{},流程实例名称：{}", processInstance.getId(), processInstance.getName());
+        Map<String,Object> mmap = new HashMap<>();
+        mmap.put("role", "审批角色");
+        mmap.put("bussinessKey", "业务key");
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("myProcess_1","业务key",mmap);
+        log.info("开启一个流程实例，id:{},流程实例名称：{},流程实例版本:{}", processInstance.getId(), processInstance.getName(), processInstance.getProcessDefinitionVersion());
+        Map<String, Object> variables = processInstance.getProcessVariables();
+        if (variables.size() > 0) {
+            variables.entrySet().stream().forEach(entry -> {
+                String key = entry.getKey();
+                String value = entry.getValue().toString();
+                System.out.println(key + "=" + value);
+            });
+        }
 
 
         //4.获取任务列表
-        List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstance.getId()).taskAssignee("张三").list();
+//        List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstance.getId()).taskAssignee("张三").list();
+        List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey("业务key").list();
+
         log.info("获取的任务数量：{}", tasks.size());
         tasks.stream().forEach(task -> {
             log.info("任务id:{},任务名称：{}", task.getId(), task.getName());
@@ -73,6 +92,14 @@ public class ActivitiHelloWordDemoServiceImpl implements ActivitiHelloWordDemoSe
 
         //6.现场负责人审批;审批流程和第五步考勤提交一样
         Task singleResult = taskService.createTaskQuery().processInstanceId(processInstance.getId()).taskAssignee("李四").singleResult();
+        Map<String, Object> processVariables = singleResult.getProcessVariables();
+        if (processVariables.size() > 0) {
+            processVariables.entrySet().stream().forEach(entry -> {
+                String key = entry.getKey();
+                String value = entry.getValue().toString();
+                System.out.println(key + "=" + value);
+            });
+        }
         map = new HashMap<>();
         map.put("date", new Date());
         map.put("remark", "现场负责人审批同意");
