@@ -20,6 +20,6 @@ public class ActivitiHelloWordDemoServiceImplTest {
 
     @Test
     public void startProcess() {
-        activitiHelloWordDemoService.startProcess("myProcess_1");
+        activitiHelloWordDemoService.startProcess("myProcess_2");
     }
 }

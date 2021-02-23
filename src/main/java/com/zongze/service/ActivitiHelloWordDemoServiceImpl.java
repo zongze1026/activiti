@@ -3,6 +3,7 @@ package com.zongze.service;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.persistence.entity.VariableInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -48,7 +49,7 @@ public class ActivitiHelloWordDemoServiceImpl implements ActivitiHelloWordDemoSe
 
         //2.获取流程定义
         List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).list();
-//        List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().
+//        List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery()
         log.info("获取到的流程定义的数量：{}", list.size());
         list.stream().forEach(d -> {
             log.info("流程定义的id:{},流程定义的key:{}", d.getId(), d.getKey());
@@ -59,7 +60,7 @@ public class ActivitiHelloWordDemoServiceImpl implements ActivitiHelloWordDemoSe
         Map<String,Object> mmap = new HashMap<>();
         mmap.put("role", "审批角色");
         mmap.put("bussinessKey", "业务key");
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("myProcess_1","业务key",mmap);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("myProcess_2",mmap);
         log.info("开启一个流程实例，id:{},流程实例名称：{},流程实例版本:{}", processInstance.getId(), processInstance.getName(), processInstance.getProcessDefinitionVersion());
         Map<String, Object> variables = processInstance.getProcessVariables();
         if (variables.size() > 0) {
@@ -72,8 +73,7 @@ public class ActivitiHelloWordDemoServiceImpl implements ActivitiHelloWordDemoSe
 
 
         //4.获取任务列表
-//        List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstance.getId()).taskAssignee("张三").list();
-        List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey("业务key").list();
+        List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstance.getId()).taskAssignee("张三").list();
 
         log.info("获取的任务数量：{}", tasks.size());
         tasks.stream().forEach(task -> {
@@ -92,25 +92,17 @@ public class ActivitiHelloWordDemoServiceImpl implements ActivitiHelloWordDemoSe
 
         //6.现场负责人审批;审批流程和第五步考勤提交一样
         Task singleResult = taskService.createTaskQuery().processInstanceId(processInstance.getId()).taskAssignee("李四").singleResult();
-        Map<String, Object> processVariables = singleResult.getProcessVariables();
-        if (processVariables.size() > 0) {
-            processVariables.entrySet().stream().forEach(entry -> {
-                String key = entry.getKey();
-                String value = entry.getValue().toString();
-                System.out.println(key + "=" + value);
-            });
-        }
-        map = new HashMap<>();
-        map.put("date", new Date());
-        map.put("remark", "现场负责人审批同意");
+        //可以获取到流程启动时设置的变量和任务节点提交设置的变量
+        Map<String, VariableInstance> maps = taskService.getVariableInstances(singleResult.getId());
+        maps.entrySet().stream().forEach(entry-> System.out.println(entry.getKey()+"="+entry.getValue().toString()));
         taskService.complete(singleResult.getId(), map);
 
 
         //7.现场负责人审批;审批流程和第五步考勤提交一样
         Task singleTask = taskService.createTaskQuery().processInstanceId(processInstance.getId()).taskAssignee("王五").singleResult();
-        map = new HashMap<>();
-        map.put("date", new Date());
-        map.put("remark", "经济责任人审批同意");
+        //可以获取到流程启动时设置的变量和任务节点提交设置的变量
+        Map<String, VariableInstance> variableInstances = taskService.getVariableInstances(singleTask.getId());
+        variableInstances.entrySet().stream().forEach(entry-> System.out.println(entry.getKey()+"="+entry.getValue().toString()));
         taskService.complete(singleTask.getId(), map);
 
     }
