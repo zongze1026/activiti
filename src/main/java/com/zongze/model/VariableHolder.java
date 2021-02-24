@@ -34,21 +34,21 @@ public class VariableHolder {
         this.variables.put(key, value);
     }
 
-    static class VariableBuilder {
+    public static class VariableBuilder {
         private Map<String, Object> variables = new HashMap<>();
 
-        VariableBuilder setModel(Object model) {
+        public VariableBuilder setModel(Object model) {
             variables.put(modelName, JSON.toJSONString(model));
             variables.put(modelClass, model.getClass().getName());
             return this;
         }
 
-        VariableBuilder setProperties(String key, String value) {
+        public VariableBuilder setProperties(String key, String value) {
             variables.put(key, value);
             return this;
         }
 
-        VariableHolder build() {
+        public VariableHolder build() {
             VariableHolder variableHolder = new VariableHolder();
             variableHolder.setVariables(variables);
             return variableHolder;
