@@ -2,6 +2,7 @@ package com.zongze.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Date;
  * @Created by xiezz
  */
 @Data
-public class ToosApply {
+public class ToosApply implements Serializable {
 
     private Integer id;
 

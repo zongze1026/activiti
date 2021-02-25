@@ -43,14 +43,14 @@ public class ActivitiServiceImplTest02 {
 
     @Test
     public void commit() {
-        activitiService.commit("7edd0c78-7710-11eb-b7b0-18c04d28dcf0");
+        activitiService.commit("15005");
     }
 
 
     @Test
     public void getTaskByProcessInstanceId() {
         ProcessModel processModel = new ProcessModel();
-        processModel.setProcessInstanceId("7ed9d824-7710-11eb-b7b0-18c04d28dcf0");
+        processModel.setProcessInstanceId("15001");
         List<Task> tasks = activitiService.getTaskByProcessInstanceId(processModel);
         tasks.stream().forEach(task->{
             System.out.println(task.getId());
