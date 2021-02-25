@@ -49,6 +49,7 @@ public class ActivitiServiceImpl02 implements ActivitiService02 {
     public ProcessModel startProcessInstance(ProcessModel processModel) {
         HashMap<String, Object> variables = new HashMap<>();
         variables.put("model", processModel);
+        variables.put("flag", 2);
         ProcessInstance processInstance= runtimeService.startProcessInstanceByKey(processModel.getKey());
         processModel.setProcessInstanceId(processInstance.getId());
         runtimeService.setVariables(processModel.getProcessInstanceId(), variables);

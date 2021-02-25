@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class ActivitiServiceImplTest02 {
 
     @Test
     public void deployProcess() {
-        activitiService.deployProcess("preGateway01.bpmn");
+        activitiService.deployProcess("abcdefg.bpmn");
     }
 
     @Test
@@ -44,14 +43,14 @@ public class ActivitiServiceImplTest02 {
 
     @Test
     public void commit() {
-        activitiService.commit("2fc7a31d-766c-11eb-b8b5-18c04d28dcf0");
+        activitiService.commit("7edd0c78-7710-11eb-b7b0-18c04d28dcf0");
     }
 
 
     @Test
     public void getTaskByProcessInstanceId() {
         ProcessModel processModel = new ProcessModel();
-        processModel.setProcessInstanceId("e16ce3be-766b-11eb-9346-18c04d28dcf0");
+        processModel.setProcessInstanceId("7ed9d824-7710-11eb-b7b0-18c04d28dcf0");
         List<Task> tasks = activitiService.getTaskByProcessInstanceId(processModel);
         tasks.stream().forEach(task->{
             System.out.println(task.getId());
