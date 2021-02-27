@@ -1,5 +1,6 @@
 package com.zongze.service.demo;
 
+import com.zongze.model.ActivitiEntity;
 import com.zongze.model.CommitLog;
 import com.zongze.model.ProcessModel;
 import com.zongze.model.ToosApply;
@@ -49,11 +50,10 @@ public class ActivitiServiceImpl02 implements ActivitiService02 {
     public ProcessModel startProcessInstance(ProcessModel processModel) {
         HashMap<String, Object> variables = new HashMap<>();
         variables.put("model", processModel);
-        variables.put("flag", 2);
+        variables.put("flag", ActivitiEntity.ReviewFlag.AGREE);
         ProcessInstance processInstance= runtimeService.startProcessInstanceByKey(processModel.getKey());
         processModel.setProcessInstanceId(processInstance.getId());
         runtimeService.setVariables(processModel.getProcessInstanceId(), variables);
-//        runner(processModel);
         return processModel;
     }
 

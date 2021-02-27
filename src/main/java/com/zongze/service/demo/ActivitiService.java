@@ -1,6 +1,10 @@
 package com.zongze.service.demo;
+import com.zongze.model.ActivitiEntity;
+import org.activiti.engine.delegate.event.ActivitiEvent;
+import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.task.Task;
 
-import com.zongze.model.VariableHolder;
+import java.util.List;
 
 /**
  * @Date 2021/2/24 10:47
@@ -9,42 +13,74 @@ import com.zongze.model.VariableHolder;
 public interface ActivitiService {
 
 
+    /**
+     * 部署流程
+     */
+    Deployment deploy();
+
 
     /**
-     * 部署工作流
-     * @param bpmn
+     * 部署流程
+     *
+     * @param processKey
      * @return void
      */
-    void deployProcess(String bpmn);
-
-
-
-
-    /**
-     * 开启流程实例
-     * @param variableHolder
-     * @return java.lang.String
-     */
-    String startProcessInstance(VariableHolder variableHolder);
-
+    Deployment deploy(String processKey);
 
 
 
     /**
      * 提交任务
+     *
      * @param taskId
      */
-    void commitTask(String taskId);
+    void commitTask(String taskId,ActivitiEntity.ReviewFlag reviewFlag,String remark);
 
 
 
+    /**
+     * 开启审批流程
+     * @param activitiEntity
+     * @return java.lang.String 返回流程id
+     */
+    String openReviewProcess(ActivitiEntity activitiEntity);
 
 
+    /**
+     * 获取任务列表
+     * @param processInstanceId
+     * @return java.util.List<org.activiti.engine.task.Task>
+     */
+    List<Task> getTasks(String processInstanceId);
 
 
+    /**
+     * 业务分发
+     * @param activitiEntity
+     * @param activitiEvent
+     */
+    void dispatch(ActivitiEntity activitiEntity,ActivitiEvent activitiEvent);
 
 
+    /**
+     * 任务创建阶段记录处理流程，对应activiti中每个任务
+     * @param activitiEntity
+     */
+    void taskCreated(ActivitiEntity activitiEntity);
 
+
+    /**
+     * 任务完成阶段，修改任务审核状态
+     * @param activitiEntity
+     */
+    void taskCompleted(ActivitiEntity activitiEntity);
+
+
+    /**
+     * 整体任务已经完成，记录审批结果
+     * @param activitiEntity
+     */
+    void processCompleted(ActivitiEntity activitiEntity);
 
 
 

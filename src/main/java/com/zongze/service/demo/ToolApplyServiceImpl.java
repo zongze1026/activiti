@@ -1,10 +1,14 @@
 package com.zongze.service.demo;
 
-import com.zongze.model.VariableHolder;
+import com.alibaba.fastjson.JSON;
+import com.zongze.model.ActivitiBusinessType;
+import com.zongze.model.ActivitiEntity;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,16 +17,26 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ToolApplyServiceImpl extends AbstractActivitiService {
+
+    private final Logger logger = LoggerFactory.getLogger(ToolApplyServiceImpl.class);
+
     public ToolApplyServiceImpl(RuntimeService runtimeService, RepositoryService repositoryService, TaskService taskService, HistoryService historyService) {
-        super(runtimeService, repositoryService, taskService, historyService, "myProcess_1");
+        super(runtimeService, repositoryService, taskService, historyService, ActivitiBusinessType.LEAVE);
+    }
+
+
+    @Override
+    public void taskCreated(ActivitiEntity activitiEntity) {
+        logger.info("任务创建：{}", JSON.toJSONString(activitiEntity));
     }
 
     @Override
-    public void extraBusiness(Object model) {
-        VariableHolder variableHolder = VariableHolder.newInstance().setProperties("remark", "回家").build();
-        String id = startProcessInstance(variableHolder);
-        String remark = (String) getProperties(id, "remark");
-        System.out.println(remark);
+    public void taskCompleted(ActivitiEntity activitiEntity) {
+        logger.info("任务完成：{}", JSON.toJSONString(activitiEntity));
+    }
 
+    @Override
+    public void processCompleted(ActivitiEntity activitiEntity) {
+        logger.info("流程结束：{}", JSON.toJSONString(activitiEntity));
     }
 }

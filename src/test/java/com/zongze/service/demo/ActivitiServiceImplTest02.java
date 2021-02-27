@@ -2,6 +2,7 @@ package com.zongze.service.demo;
 
 import com.zongze.model.ProcessModel;
 import com.zongze.model.ToosApply;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.task.Task;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +26,7 @@ public class ActivitiServiceImplTest02 {
 
     @Test
     public void deployProcess() {
-        activitiService.deployProcess("abcdefg.bpmn");
+        activitiService.deployProcess("processes/abcdefg.bpmn");
     }
 
     @Test
