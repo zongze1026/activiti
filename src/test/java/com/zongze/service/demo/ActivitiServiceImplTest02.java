@@ -26,7 +26,7 @@ public class ActivitiServiceImplTest02 {
 
     @Test
     public void deployProcess() {
-        activitiService.deployProcess("processes/abcdefg.bpmn");
+        activitiService.deployProcess("processes/multi.bpmn");
     }
 
     @Test
@@ -44,7 +44,7 @@ public class ActivitiServiceImplTest02 {
 
     @Test
     public void commit() {
-        activitiService.commit("15005");
+        activitiService.commit("260043");
     }
 
 

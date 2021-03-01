@@ -33,8 +33,8 @@ public class ToolApplyServiceImplTest {
         log.setName("张三");
         ActivitiEntity activitiEntity = ActivitiEntity.newBuilder()
                 .setModel(log)
-                .setProperties("hasRole", 2)
-                .setProperties("moneryFlag", 2)
+                .setProperties("hasRole", 1)
+                .setProperties("moneryFlag", 1)
                 .build();
         String processInstanceId = toolApplyService.openReviewProcess(activitiEntity);
         System.out.println(processInstanceId);

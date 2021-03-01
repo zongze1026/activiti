@@ -31,6 +31,8 @@ import static org.activiti.engine.delegate.event.ActivitiEventType.TASK_CREATED;
 @Component
 public class ActivitiListener implements ActivitiEventListener, ApplicationContextAware {
 
+    private static final Logger logger = LoggerFactory.getLogger(ActivitiListener.class);
+
     private final List<ActivitiEventType> events = Arrays.asList(TASK_CREATED, TASK_COMPLETED, PROCESS_COMPLETED);
 
     private ApplicationContext applicationContext;
@@ -40,34 +42,62 @@ public class ActivitiListener implements ActivitiEventListener, ApplicationConte
      * 流程启动事件{@link org.activiti.engine.delegate.event.impl.ActivitiProcessStartedEventImpl}
      * 以下其他的事件类型均为{@link org.activiti.engine.delegate.event.impl.ActivitiEntityEventImpl}
      */
+//    @Override
+//    public void onEvent(ActivitiEvent activitiEvent) {
+//        if (events.stream().anyMatch(event -> event.equals(activitiEvent.getType()))) {
+//            ActivitiEntityEventImpl entityEvent = (ActivitiEntityEventImpl) activitiEvent;
+//            RuntimeService runtimeService = applicationContext.getBean(RuntimeService.class);
+//            TaskService taskService = applicationContext.getBean(TaskService.class);
+//            ActivitiEntity activitiEntity = new ActivitiEntity();
+//            AbstractActivitiService service = null;
+//            String className = (String) runtimeService.getVariables(activitiEvent.getProcessInstanceId()).get(ActivitiEntity.processClass);
+//            try {
+//                activitiEntity.setVariables(runtimeService.getVariables(activitiEvent.getProcessInstanceId()));
+//                activitiEntity.setProcessInstanceId(activitiEvent.getProcessInstanceId());
+//                if (entityEvent.getEntity() instanceof TaskEntityImpl) {
+//                    TaskEntityImpl entity = (TaskEntityImpl) entityEvent.getEntity();
+//                    activitiEntity.setRemark((String) taskService.getVariableLocal(entity.getId(), ActivitiEntity.remarkKey));
+//                    activitiEntity.setTaskId(entity.getId());
+//                    activitiEntity.setNodeRemark(entity.getName());
+//                    activitiEntity.setRoleName(entity.getAssignee());
+//                    Class aClass = Class.forName(className);
+//                    service = (AbstractActivitiService) applicationContext.getBean(aClass);
+//                }
+//                service.dispatch(activitiEntity, activitiEvent);
+//            } catch (ClassNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//    }
+
+
+
+    /**
+     * 流程启动事件{@link org.activiti.engine.delegate.event.impl.ActivitiProcessStartedEventImpl}
+     * 以下其他的事件类型均为{@link ActivitiEntityEventImpl}
+     */
+    @SuppressWarnings("all")
     @Override
     public void onEvent(ActivitiEvent activitiEvent) {
-        if (events.stream().anyMatch(event -> event.equals(activitiEvent.getType()))) {
-            ActivitiEntityEventImpl entityEvent = (ActivitiEntityEventImpl) activitiEvent;
-            RuntimeService runtimeService = applicationContext.getBean(RuntimeService.class);
-            TaskService taskService = applicationContext.getBean(TaskService.class);
-            ActivitiEntity activitiEntity = new ActivitiEntity();
-            AbstractActivitiService service = null;
-            String className = (String) runtimeService.getVariables(activitiEvent.getProcessInstanceId()).get(ActivitiEntity.processClass);
-            try {
-                activitiEntity.setVariables(runtimeService.getVariables(activitiEvent.getProcessInstanceId()));
-                activitiEntity.setProcessInstanceId(activitiEvent.getProcessInstanceId());
-                if (entityEvent.getEntity() instanceof TaskEntityImpl) {
-                    TaskEntityImpl entity = (TaskEntityImpl) entityEvent.getEntity();
-                    activitiEntity.setRemark((String) taskService.getVariableLocal(entity.getId(), ActivitiEntity.remarkKey));
-                    activitiEntity.setTaskId(entity.getId());
-                    activitiEntity.setNodeRemark(entity.getName());
-                    activitiEntity.setRoleName(entity.getAssignee());
-                    Class aClass = Class.forName(className);
-                    service = (AbstractActivitiService) applicationContext.getBean(aClass);
-                }
-                service.dispatch(activitiEntity, activitiEvent);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+        switch (activitiEvent.getType()) {
+            case PROCESS_STARTED:
+                logger.info("流程开始事件触发，事件类型：{}", activitiEvent.getClass().getName());
+                break;
+            case TASK_COMPLETED:
+                logger.info("任务完成事件促发，事件类型：{}", activitiEvent.getClass().getName());
+                break;
+            case PROCESS_COMPLETED:
+                logger.info("流程结束事件触发，事件类型：{}", activitiEvent.getClass().getName());
+                break;
+            case TASK_CREATED:
+                logger.info("任务创建事件促发，事件类型：{}", activitiEvent.getClass().getName());
+                break;
         }
 
     }
+
+
 
     @Override
     public boolean isFailOnException() {

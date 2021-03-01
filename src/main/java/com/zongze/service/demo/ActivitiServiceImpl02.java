@@ -14,10 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 /**
  * @Date 2021/2/23 17:11
@@ -51,9 +49,13 @@ public class ActivitiServiceImpl02 implements ActivitiService02 {
         HashMap<String, Object> variables = new HashMap<>();
         variables.put("model", processModel);
         variables.put("flag", ActivitiEntity.ReviewFlag.AGREE);
-        ProcessInstance processInstance= runtimeService.startProcessInstanceByKey(processModel.getKey());
+        List<String> list = new ArrayList<>();
+        list.add("张三");
+        list.add("李四");
+        list.add("王五");
+        variables.put("userList",list);
+        ProcessInstance processInstance= runtimeService.startProcessInstanceByKey(processModel.getKey(),variables);
         processModel.setProcessInstanceId(processInstance.getId());
-        runtimeService.setVariables(processModel.getProcessInstanceId(), variables);
         return processModel;
     }
 
