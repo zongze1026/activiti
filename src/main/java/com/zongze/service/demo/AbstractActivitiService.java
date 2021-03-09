@@ -45,9 +45,10 @@ public abstract class AbstractActivitiService implements ActivitiService {
     @Override
     public Deployment deploy() {
         Deployment deployment = repositoryService.createDeployment()
+                .key(activitiBusinessType.getProcessKey())
                 .addClasspathResource(activitiBusinessType.getFileName())
                 .deploy();
-        logger.info("流程部署成功,流程id：{}", deployment.getId());
+        logger.info("process deploy success ,deployId：{}", deployment.getId());
         return deployment;
     }
 
@@ -55,14 +56,19 @@ public abstract class AbstractActivitiService implements ActivitiService {
     @Override
     public Deployment deploy(String processKey) {
         ActivitiBusinessType businessType = ActivitiBusinessType.getBusinessType(processKey);
-        Assert.notNull(businessType, "bpmn文件未找到");
+        Assert.notNull(businessType, "The bpmn file not find");
         Deployment deployment = repositoryService.createDeployment()
                 .addClasspathResource(businessType.getFileName())
                 .deploy();
-        logger.info("流程部署成功,流程id：{}", deployment.getId());
+        logger.info("process deploy success ,deployId：{}", deployment.getId());
         return deployment;
     }
 
+
+    @Override
+    public Deployment findDeploymentInstance() {
+        return repositoryService.createDeploymentQuery().deploymentKey(activitiBusinessType.getProcessKey()).singleResult();
+    }
 
     @Override
     public void commitTask(Task task, ActivitiEntity.ReviewFlag reviewFlag, String remark) {
@@ -70,6 +76,13 @@ public abstract class AbstractActivitiService implements ActivitiService {
         variables.put(ActivitiEntity.getReviewFlagKey(), reviewFlag.getFlag());
         variables.put(ActivitiEntity.getRemarkKey(), remark);
         taskService.complete(task.getId(), variables);
+    }
+
+
+    @Override
+    public void commitTask(String taskId, ActivitiEntity.ReviewFlag reviewFlag, String remark) {
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        commitTask(task,reviewFlag,remark);
     }
 
     @Override
@@ -103,7 +116,6 @@ public abstract class AbstractActivitiService implements ActivitiService {
     }
 
 
-
     /**
      * 处理审批类型
      *
@@ -115,7 +127,6 @@ public abstract class AbstractActivitiService implements ActivitiService {
             setProperties(activitiEntity.getProcessInstanceId(), ActivitiEntity.getReviewTypeKey(), ActivitiEntity.ReviewType.REVIEW.getFlag());
         }
     }
-
 
 
     /**
@@ -237,7 +248,6 @@ public abstract class AbstractActivitiService implements ActivitiService {
     protected void setProperties(String processInstanceId, String key, Object value) {
         runtimeService.setVariable(processInstanceId, key, value);
     }
-
 
 
 }

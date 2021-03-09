@@ -29,6 +29,15 @@ public interface ActivitiService {
 
 
     /**
+     * 查询部署实例
+     *
+     * @return Deployment
+     */
+    Deployment findDeploymentInstance();
+
+
+
+    /**
      * 提交任务
      *
      * @param taskId
@@ -55,17 +64,6 @@ public interface ActivitiService {
      */
     String startGeneralTask(ActivitiEntity activitiEntity);
 
-
-    /**
-     * 开启多任务会签流程
-     *
-     * @param activitiEntity
-     * @param dsNumbers      参与会签的得胜号
-     * @param factor         条件参数
-     * @param contains       是否包含临界值
-     * @return java.lang.String
-     */
-    String startMultiTask(ActivitiEntity activitiEntity, List<String> dsNumbers, Double factor, boolean contains);
 
 
     /**
@@ -117,14 +115,6 @@ public interface ActivitiService {
      */
     String getDsNumberByRoleName(String roleName);
 
-
-
-    /**
-     * 任务节点删除
-     * @param activitiEntity
-     * @return void
-     */
-    void taskNodeDelete(ActivitiEntity activitiEntity);
 
 
 }

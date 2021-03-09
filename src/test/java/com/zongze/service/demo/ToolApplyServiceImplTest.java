@@ -1,7 +1,9 @@
 package com.zongze.service.demo;
+import com.alibaba.fastjson.JSON;
 import com.zongze.config.ApplicationContextHolder;
 import com.zongze.model.ActivitiEntity;
 import com.zongze.model.CommitLog;
+import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.task.Task;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +32,7 @@ public class ToolApplyServiceImplTest implements ApplicationContextAware {
 
     @Test
     public void startProcessInstance() {
-        toolApplyService.deploy();
+//        toolApplyService.deploy();
         //构建实体类
         CommitLog log = new CommitLog();
         log.setTaskId("14");
@@ -46,14 +48,28 @@ public class ToolApplyServiceImplTest implements ApplicationContextAware {
         userList.add("tfa2386173198918");
         userList.add("tfa2386173198918");
         ActivitiEntity activitiEntity = ActivitiEntity.newBuilder().setModel(log).build();
-        String processInstanceId = toolApplyService.startMultiTask(activitiEntity, userList, 0.54,true);
+        String processInstanceId = toolApplyService.startMultiTask(activitiEntity, userList, 0.0,false);
+//        String processInstanceId = toolApplyService.startGeneralTask(activitiEntity);
         System.out.println(processInstanceId);
     }
 
 
     @Test
+    public void findDeployment(){
+        Deployment deploymentInstance = toolApplyService.findDeploymentInstance();
+        if(deploymentInstance != null){
+            System.out.println(JSON.toJSONString(deploymentInstance));
+        }else{
+            System.out.println("没有查询到部署实例");
+        }
+    }
+
+
+
+
+    @Test
     public void commitTask() {
-        List<String> list = toolApplyService.getTasks("235012").stream().map(task->task.getId()).collect(Collectors.toList());
+        List<String> list = toolApplyService.getTasks("2501").stream().map(task->task.getId()).collect(Collectors.toList());
         for (int i = 0; i < list.size(); i++) {
             if(i % 2 ==0){
                 toolApplyService.commitTask(list.get(i), ActivitiEntity.ReviewFlag.AGREE, "上面有人"+i);

@@ -77,7 +77,14 @@ public abstract class AbstractMultiProcessActivitiService extends AbstractActivi
     }
 
 
-    @Override
+    /**
+     * 开启一个多人会签任务
+     * @param activitiEntity
+     * @param dsNumbers
+     * @param factor
+     * @param contains
+     * @return java.lang.String
+     */
     public String startMultiTask(ActivitiEntity activitiEntity, List<String> dsNumbers, Double factor, boolean contains) {
         Assert.notEmpty(dsNumbers, "The signer cannot be empty");
         Assert.notNull(factor, "The condition cannot be null");
@@ -90,6 +97,15 @@ public abstract class AbstractMultiProcessActivitiService extends AbstractActivi
         activitiEntity.getVariables().put(ActivitiEntity.getFactorContainsFlag(), contains);
         return super.startGeneralTask(activitiEntity);
     }
+
+
+
+    /**
+     * 任务节点删除
+     * @param activitiEntity
+     * @return void
+     */
+    public abstract void  taskNodeDelete(ActivitiEntity activitiEntity);
 
 
 }

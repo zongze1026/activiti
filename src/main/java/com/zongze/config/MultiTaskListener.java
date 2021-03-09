@@ -1,7 +1,7 @@
 package com.zongze.config;
 
 import com.zongze.model.ActivitiEntity;
-import com.zongze.service.demo.AbstractActivitiService;
+import com.zongze.service.demo.AbstractMultiProcessActivitiService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
@@ -27,7 +27,7 @@ public class MultiTaskListener implements TaskListener {
             activitiEntity.setVariables(runtimeService.getVariables(delegateTask.getProcessInstanceId()));
             String className = (String) activitiEntity.getProperties(ActivitiEntity.getProcessClass());
             Class aClass = Class.forName(className);
-            AbstractActivitiService service = (AbstractActivitiService) ApplicationContextHolder.getBean(aClass);
+            AbstractMultiProcessActivitiService service = (AbstractMultiProcessActivitiService) ApplicationContextHolder.getBean(aClass);
             service.taskNodeDelete(activitiEntity);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
