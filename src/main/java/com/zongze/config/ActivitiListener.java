@@ -58,14 +58,16 @@ public class ActivitiListener implements ActivitiEventListener {
                         activitiEntity.setNodeRemark(entity.getName());
                         activitiEntity.setRoleName(entity.getAssignee());
                         activitiEntity.setTaskId(entity.getId());
-                        ActivitiEntity.ReviewFlag reviewFlag = ActivitiEntity.ReviewFlag.getReviewFlagInfo((Integer) activitiEntity.getProperties(ActivitiEntity.getReviewFlagKey()));
-                        activitiEntity.setReviewFlag(reviewFlag);
+                        activitiEntity.setReviewFlag(ActivitiEntity.ReviewFlag.getReviewFlagInfo((Integer) activitiEntity.getProperties(ActivitiEntity.getReviewFlagKey())));
                         break;
                     case TASK_CREATED:
                         entity = (TaskEntityImpl) entityEvent.getEntity();
                         activitiEntity.setNodeRemark(entity.getName());
                         activitiEntity.setRoleName(entity.getAssignee());
                         activitiEntity.setTaskId(entity.getId());
+                        break;
+                    case PROCESS_COMPLETED:
+                        activitiEntity.setReviewFlag(ActivitiEntity.ReviewFlag.getReviewFlagInfo((Integer) activitiEntity.getProperties(ActivitiEntity.getReviewFlagKey())));
                         break;
                 }
                 service.dispatch(activitiEntity, activitiEvent);

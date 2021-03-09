@@ -24,6 +24,7 @@ public class MultiTaskListener implements TaskListener {
             RuntimeService runtimeService = ApplicationContextHolder.getBean(RuntimeService.class);
             ActivitiEntity activitiEntity = new ActivitiEntity();
             activitiEntity.setProcessInstanceId(delegateTask.getProcessInstanceId());
+            activitiEntity.setTaskId(delegateTask.getId());
             activitiEntity.setVariables(runtimeService.getVariables(delegateTask.getProcessInstanceId()));
             String className = (String) activitiEntity.getProperties(ActivitiEntity.getProcessClass());
             Class aClass = Class.forName(className);

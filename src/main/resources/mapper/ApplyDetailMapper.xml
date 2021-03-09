@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zongze.mapper.ApplyDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.zongze.model.ApplyDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+    <result column="process_instance_id" property="processInstanceId" jdbcType="VARCHAR" />
+    <result column="engineering_group_id" property="engineeringGroupId" jdbcType="INTEGER" />
+    <result column="engineering_child_group" property="engineeringChildGroup" jdbcType="INTEGER" />
+    <result column="task_type" property="taskType" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="ds_number" property="dsNumber" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, task_id, process_instance_id, engineering_group_id, engineering_child_group, 
+    task_type, state, ds_number, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from apply_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from apply_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zongze.model.ApplyDetail" >
+    insert into apply_detail (id, task_id, process_instance_id, 
+      engineering_group_id, engineering_child_group, 
+      task_type, state, ds_number, 
+      create_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{taskId,jdbcType=VARCHAR}, #{processInstanceId,jdbcType=VARCHAR}, 
+      #{engineeringGroupId,jdbcType=INTEGER}, #{engineeringChildGroup,jdbcType=INTEGER}, 
+      #{taskType,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, #{dsNumber,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zongze.model.ApplyDetail" >
+    insert into apply_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="processInstanceId != null" >
+        process_instance_id,
+      </if>
+      <if test="engineeringGroupId != null" >
+        engineering_group_id,
+      </if>
+      <if test="engineeringChildGroup != null" >
+        engineering_child_group,
+      </if>
+      <if test="taskType != null" >
+        task_type,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="dsNumber != null" >
+        ds_number,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="nodeRemark != null" >
+        node_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="processInstanceId != null" >
+        #{processInstanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="engineeringGroupId != null" >
+        #{engineeringGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="engineeringChildGroup != null" >
+        #{engineeringChildGroup,jdbcType=INTEGER},
+      </if>
+      <if test="taskType != null" >
+        #{taskType,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="dsNumber != null" >
+        #{dsNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nodeRemark != null" >
+        #{nodeRemark}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zongze.model.ApplyDetail" >
+    update apply_detail
+    <set >
+      <if test="taskId != null" >
+        task_id = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="processInstanceId != null" >
+        process_instance_id = #{processInstanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="engineeringGroupId != null" >
+        engineering_group_id = #{engineeringGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="engineeringChildGroup != null" >
+        engineering_child_group = #{engineeringChildGroup,jdbcType=INTEGER},
+      </if>
+      <if test="taskType != null" >
+        task_type = #{taskType,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="dsNumber != null" >
+        ds_number = #{dsNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zongze.model.ApplyDetail" >
+    update apply_detail
+    set task_id = #{taskId,jdbcType=VARCHAR},
+      process_instance_id = #{processInstanceId,jdbcType=VARCHAR},
+      engineering_group_id = #{engineeringGroupId,jdbcType=INTEGER},
+      engineering_child_group = #{engineeringChildGroup,jdbcType=INTEGER},
+      task_type = #{taskType,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
+      ds_number = #{dsNumber,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectActivitiDetail" parameterType="com.zongze.model.ApplyDetail" resultType="com.zongze.model.ApplyDetail">
+    select
+    <include refid="Base_Column_List" />
+    from apply_detail
+    where process_instance_id = #{processInstanceId} and  task_id = #{taskId}
+  </select>
+</mapper>

@@ -1,5 +1,6 @@
 package com.zongze.service.demo;
 
+import com.alibaba.fastjson.JSON;
 import com.zongze.model.ActivitiBusinessType;
 import com.zongze.model.ActivitiEntity;
 import org.activiti.engine.HistoryService;
@@ -12,6 +13,7 @@ import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +84,9 @@ public abstract class AbstractActivitiService implements ActivitiService {
     @Override
     public void commitTask(String taskId, ActivitiEntity.ReviewFlag reviewFlag, String remark) {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-        commitTask(task,reviewFlag,remark);
+        if (!ObjectUtils.isEmpty(task)) {
+            commitTask(task, reviewFlag, remark);
+        }
     }
 
     @Override
@@ -103,15 +107,35 @@ public abstract class AbstractActivitiService implements ActivitiService {
     public void dispatch(ActivitiEntity activitiEntity, ActivitiEvent activitiEvent) {
         switch (activitiEvent.getType()) {
             case TASK_COMPLETED:
+                logger.info("任务完成触发，流程实体：{}", JSON.toJSONString(activitiEntity));
                 taskCompleted(activitiEntity);
                 break;
             case PROCESS_COMPLETED:
+                logger.info("审批流程结束，流程实体：{}", JSON.toJSONString(activitiEntity));
                 processCompleted(activitiEntity);
                 break;
             case TASK_CREATED:
+                logger.info("任务创建触发，流程实体：{}", JSON.toJSONString(activitiEntity));
+                processReviewTypeBeforeTaskCreated(activitiEntity);
                 taskCreated(activitiEntity);
                 processReviewTypeAfterTaskCreated(activitiEntity);
                 break;
+        }
+    }
+
+
+    /**
+     * 得盛号处理
+     *
+     * @param activitiEntity
+     * @return void
+     */
+    protected void processReviewTypeBeforeTaskCreated(ActivitiEntity activitiEntity) {
+        ActivitiEntity.ReviewType reviewType = activitiEntity.getReviewType();
+        if (reviewType.equals(ActivitiEntity.ReviewType.REVIEW)) {
+            if (!determineDsNumber(activitiEntity.getRoleName())) {
+                activitiEntity.setDsNumber(getDsNumberByRoleName(activitiEntity.getRoleName()));
+            }
         }
     }
 

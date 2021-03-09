@@ -2,7 +2,7 @@ package com.zongze.service.demo;
 import com.alibaba.fastjson.JSON;
 import com.zongze.config.ApplicationContextHolder;
 import com.zongze.model.ActivitiEntity;
-import com.zongze.model.CommitLog;
+import com.zongze.model.MoneyApply;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.task.Task;
 import org.junit.Test;
@@ -14,9 +14,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 /**
@@ -32,12 +31,13 @@ public class ToolApplyServiceImplTest implements ApplicationContextAware {
 
     @Test
     public void startProcessInstance() {
-//        toolApplyService.deploy();
         //构建实体类
-        CommitLog log = new CommitLog();
-        log.setTaskId("14");
-        log.setApplyTime(new Date());
-        log.setName("张三");
+        MoneyApply moneyApply = new MoneyApply();
+        moneyApply.setAmount("2500");
+        moneyApply.setDsNumber("tfv2386173198918");
+        moneyApply.setEngineeringChildGroup(118);
+        moneyApply.setEngineeringGroupId(201);
+        moneyApply.setName("张三");
         List<String> userList = new ArrayList<>();
         userList.add("tfa2386173198918");
         userList.add("tfa2386173198918");
@@ -47,10 +47,9 @@ public class ToolApplyServiceImplTest implements ApplicationContextAware {
         userList.add("tfa2386173198918");
         userList.add("tfa2386173198918");
         userList.add("tfa2386173198918");
-        ActivitiEntity activitiEntity = ActivitiEntity.newBuilder().setModel(log).build();
-        String processInstanceId = toolApplyService.startMultiTask(activitiEntity, userList, 0.0,false);
-//        String processInstanceId = toolApplyService.startGeneralTask(activitiEntity);
-        System.out.println(processInstanceId);
+        toolApplyService.commitTask(moneyApply);
+        ActivitiEntity activitiEntity = ActivitiEntity.newBuilder().setModel(moneyApply).build();
+        String processInstanceId = toolApplyService.startMultiTask(activitiEntity, userList, 0.2,false);
     }
 
 
@@ -69,16 +68,16 @@ public class ToolApplyServiceImplTest implements ApplicationContextAware {
 
     @Test
     public void commitTask() {
-        List<String> list = toolApplyService.getTasks("2501").stream().map(task->task.getId()).collect(Collectors.toList());
-        for (int i = 0; i < list.size(); i++) {
-            if(i % 2 ==0){
-                toolApplyService.commitTask(list.get(i), ActivitiEntity.ReviewFlag.AGREE, "上面有人"+i);
-            }else{
-                toolApplyService.commitTask(list.get(i), ActivitiEntity.ReviewFlag.REJECT, "没有关系"+i);
-            }
-        }
+//        List<String> list = toolApplyService.getTasks("60001").stream().map(task->task.getId()).collect(Collectors.toList());
+//        for (int i = 0; i < list.size(); i++) {
+//            if(i % 2 ==0){
+//                toolApplyService.commitTask(list.get(i), ActivitiEntity.ReviewFlag.AGREE, "上面有人"+i);
+//            }else{
+//                toolApplyService.commitTask(list.get(i), ActivitiEntity.ReviewFlag.REJECT, "没有关系"+i);
+//            }
+//        }
 
-//        toolApplyService.commitTask("172595", ActivitiEntity.ReviewFlag.AGREE, "上面有人");
+        toolApplyService.commitTask("62520", ActivitiEntity.ReviewFlag.AGREE, "同意申请");
     }
 
 

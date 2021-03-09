@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zongze.mapper.MoneyApplyMapper" >
+  <resultMap id="BaseResultMap" type="com.zongze.model.MoneyApply" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="engineering_group_id" property="engineeringGroupId" jdbcType="INTEGER" />
+    <result column="engineering_child_group" property="engineeringChildGroup" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="ds_number" property="dsNumber" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, engineering_group_id, engineering_child_group, name, amount, state, ds_number, 
+    create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from money_apply
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from money_apply
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zongze.model.MoneyApply" >
+    insert into money_apply (id, engineering_group_id, engineering_child_group, 
+      name, amount, state, 
+      ds_number, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{engineeringGroupId,jdbcType=INTEGER}, #{engineeringChildGroup,jdbcType=INTEGER}, 
+      #{name,jdbcType=VARCHAR}, #{amount,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, 
+      #{dsNumber,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zongze.model.MoneyApply" useGeneratedKeys="true" keyProperty="id">
+    insert into money_apply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="engineeringGroupId != null" >
+        engineering_group_id,
+      </if>
+      <if test="engineeringChildGroup != null" >
+        engineering_child_group,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="dsNumber != null" >
+        ds_number,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="engineeringGroupId != null" >
+        #{engineeringGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="engineeringChildGroup != null" >
+        #{engineeringChildGroup,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="dsNumber != null" >
+        #{dsNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zongze.model.MoneyApply" >
+    update money_apply
+    <set >
+      <if test="engineeringGroupId != null" >
+        engineering_group_id = #{engineeringGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="engineeringChildGroup != null" >
+        engineering_child_group = #{engineeringChildGroup,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="dsNumber != null" >
+        ds_number = #{dsNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zongze.model.MoneyApply" >
+    update money_apply
+    set engineering_group_id = #{engineeringGroupId,jdbcType=INTEGER},
+      engineering_child_group = #{engineeringChildGroup,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER},
+      ds_number = #{dsNumber,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

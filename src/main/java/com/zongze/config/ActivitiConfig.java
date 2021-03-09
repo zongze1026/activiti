@@ -45,18 +45,14 @@ public class ActivitiConfig extends AbstractProcessEngineAutoConfiguration imple
     }
 
 
-    @Bean
-    public PlatformTransactionManager activitiTransactionManager(){
-        return new DataSourceTransactionManager(activitiDataSource());
-    }
 
 
     @Bean
-    public SpringProcessEngineConfiguration springProcessEngineConfiguration(SpringAsyncExecutor springAsyncExecutor) throws IOException {
+    public SpringProcessEngineConfiguration springProcessEngineConfiguration(SpringAsyncExecutor springAsyncExecutor,PlatformTransactionManager platformTransactionManager) throws IOException {
 
         return baseSpringProcessEngineConfiguration(
                 activitiDataSource(),
-                activitiTransactionManager(),
+                platformTransactionManager,
                 springAsyncExecutor);
     }
 
