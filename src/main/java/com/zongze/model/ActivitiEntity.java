@@ -9,18 +9,27 @@ import java.util.Map;
  * @Created by xiezz
  */
 public class ActivitiEntity {
-
-    public static final String modelKey = "model";
-    public static final String modelClass = "modelClass";
-    public static final String processClass = "processClass";
-    public static final String reviewFlagKey = "reviewFlag";
-    public static final String reviewTypeKey = "reviewType";
-    public static final String remarkKey = "remark";
+    private static final String modelKey = "model";
+    private static final String modelClass = "modelClass";
+    private static final String processClass = "processClass";
+    private static final String reviewFlagKey = "flag";
+    private static final String nodeFlagKey = "nodeFlag";
+    private static final String reviewTypeKey = "reviewType";
+    private static final String remarkKey = "remark";
+    private static final String userList = "userList";
+    private static final String passFactor = "passFactor";
+    private static final String factorContainsFlag = "factorContainsFlag";
+    private static final String passCount = "passCount";
+    private static final String rejectCount = "rejectCount";
+    private static final String totalCount = "totalCount";
     private String taskId;
     private String processInstanceId;
     private String nodeRemark;
+    private String commitRemark;
     private String roleName;
-    private String remark;
+    private String dsNumber;
+    private ReviewFlag reviewFlag;
+    private ReviewType reviewType;
     private Map<String, Object> variables;
 
 
@@ -58,8 +67,7 @@ public class ActivitiEntity {
      * @return com.zongze.model.ActivitiEntity.ReviewFlag
      */
     public ReviewFlag getReviewFlag() {
-        Integer flag = (Integer) variables.get(reviewFlagKey);
-        return ReviewFlag.getReviewFlagInfo(flag);
+      return reviewFlag;
     }
 
 
@@ -68,10 +76,66 @@ public class ActivitiEntity {
      * @return com.zongze.model.ActivitiEntity.ReviewType
      */
     public ReviewType getReviewType() {
-        Integer flag = (Integer) variables.get(reviewTypeKey);
-        return ReviewType.getReviewTypeInfo(flag);
+       return reviewType;
     }
 
+
+    public static ActivitiEntityBuilder newBuilder() {
+        return new ActivitiEntityBuilder();
+    }
+
+
+    public static String getModelKey() {
+        return modelKey;
+    }
+
+    public static String getFactorContainsFlag() {
+        return factorContainsFlag;
+    }
+
+    public static String getModelClass() {
+        return modelClass;
+    }
+
+    public static String getProcessClass() {
+        return processClass;
+    }
+
+    public static String getReviewFlagKey() {
+        return reviewFlagKey;
+    }
+
+    public static String getNodeFlagKey() {
+        return nodeFlagKey;
+    }
+
+    public static String getReviewTypeKey() {
+        return reviewTypeKey;
+    }
+
+    public static String getRemarkKey() {
+        return remarkKey;
+    }
+
+    public static String getUserList() {
+        return userList;
+    }
+
+    public static String getPassFactor() {
+        return passFactor;
+    }
+
+    public static String getPassCount() {
+        return passCount;
+    }
+
+    public static String getRejectCount() {
+        return rejectCount;
+    }
+
+    public static String getTotalCount() {
+        return totalCount;
+    }
 
     public String getTaskId() {
         return taskId;
@@ -97,6 +161,14 @@ public class ActivitiEntity {
         this.nodeRemark = nodeRemark;
     }
 
+    public String getCommitRemark() {
+        return commitRemark;
+    }
+
+    public void setCommitRemark(String commitRemark) {
+        this.commitRemark = commitRemark;
+    }
+
     public String getRoleName() {
         return roleName;
     }
@@ -105,52 +177,28 @@ public class ActivitiEntity {
         this.roleName = roleName;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public String getDsNumber() {
+        return dsNumber;
     }
 
-    public void setVariables(Map<String, Object> variables) {
-        this.variables = variables;
+    public void setDsNumber(String dsNumber) {
+        this.dsNumber = dsNumber;
     }
 
-    public static ActivitiEntityBuilder newBuilder() {
-        return new ActivitiEntityBuilder();
+    public void setReviewFlag(ReviewFlag reviewFlag) {
+        this.reviewFlag = reviewFlag;
     }
 
-    public void setProperties(String key, String value) {
-        this.variables.put(key, value);
+    public void setReviewType(ReviewType reviewType) {
+        this.reviewType = reviewType;
     }
 
     public Map<String, Object> getVariables() {
         return variables;
     }
 
-    public static String getModelKey() {
-        return modelKey;
-    }
-
-    public static String getModelClass() {
-        return modelClass;
-    }
-
-    public static String getProcessClass() {
-        return processClass;
-    }
-
-    public static String getRemarkKey() {
-        return remarkKey;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public static String getReviewFlagKey() {
-        return reviewFlagKey;
-    }
-
-    public static String getReviewTypeKey() {
-        return reviewTypeKey;
+    public void setVariables(Map<String, Object> variables) {
+        this.variables = variables;
     }
 
     public static class ActivitiEntityBuilder {
@@ -158,7 +206,7 @@ public class ActivitiEntity {
 
         public ActivitiEntityBuilder() {
             setReviewFlag(ReviewFlag.AGREE);
-            setReviewType(ReviewType.REVIEW);
+            setReviewType(ReviewType.APPLY);
         }
 
         public ActivitiEntityBuilder setReviewFlag(ReviewFlag reviewFlag) {
@@ -192,11 +240,17 @@ public class ActivitiEntity {
             return this;
         }
 
+        public ActivitiEntityBuilder setProperties(String key, Boolean value) {
+            variables.put(key, value);
+            return this;
+        }
+
         public ActivitiEntity build() {
             ActivitiEntity activitiEntity = new ActivitiEntity();
             activitiEntity.setVariables(variables);
             return activitiEntity;
         }
+
     }
 
 
@@ -212,7 +266,7 @@ public class ActivitiEntity {
             this.remark = remark;
         }
 
-        private static ReviewFlag getReviewFlagInfo(Integer flag) {
+        public static ReviewFlag getReviewFlagInfo(Integer flag) {
             for (ReviewFlag reviewFlag : ReviewFlag.values()) {
                 if (reviewFlag.getFlag().equals(flag)) {
                     return reviewFlag;
@@ -243,7 +297,7 @@ public class ActivitiEntity {
             this.remark = remark;
         }
 
-        private static ReviewType getReviewTypeInfo(Integer flag) {
+        public static ReviewType getReviewTypeInfo(Integer flag) {
             for (ReviewType reviewType : ReviewType.values()) {
                 if (reviewType.getFlag().equals(flag)) {
                     return reviewType;

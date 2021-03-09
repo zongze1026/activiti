@@ -47,8 +47,7 @@ public class ActivitiServiceImpl02 implements ActivitiService02 {
     @Override
     public ProcessModel startProcessInstance(ProcessModel processModel) {
         HashMap<String, Object> variables = new HashMap<>();
-        variables.put("model", processModel);
-        variables.put("flag", ActivitiEntity.ReviewFlag.AGREE);
+        variables.put("flag", ActivitiEntity.ReviewFlag.AGREE.getFlag());
         List<String> list = new ArrayList<>();
         list.add("张三");
         list.add("李四");
@@ -73,6 +72,10 @@ public class ActivitiServiceImpl02 implements ActivitiService02 {
 
     @Override
     public ProcessModel commit(String taskId) {
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        String processInstanceId = task.getProcessInstanceId();
+        runtimeService.setVariable(processInstanceId, "passFlag", true);
+        runtimeService.setVariable(processInstanceId, "flag", 1);
         taskService.complete(taskId);
         return null;
     }

@@ -26,7 +26,7 @@ public class ActivitiServiceImplTest02 {
 
     @Test
     public void deployProcess() {
-        activitiService.deployProcess("processes/multi.bpmn");
+        activitiService.deployProcess("processes/activiti003.bpmn");
     }
 
     @Test
@@ -37,21 +37,21 @@ public class ActivitiServiceImplTest02 {
         toosApply.setName("老王");
         toosApply.setCreateTime(new Date());
         processModel.setModel(toosApply);
-        processModel.setKey("myProcess_1");
+        processModel.setKey("activiti002");
         activitiService.startProcessInstance(processModel);
         System.out.println(String.format("流程实例详情，id=%s",processModel.getProcessInstanceId()));
     }
 
     @Test
     public void commit() {
-        activitiService.commit("260043");
+        activitiService.commit("525012");
     }
 
 
     @Test
     public void getTaskByProcessInstanceId() {
         ProcessModel processModel = new ProcessModel();
-        processModel.setProcessInstanceId("15001");
+        processModel.setProcessInstanceId("525012");
         List<Task> tasks = activitiService.getTaskByProcessInstanceId(processModel);
         tasks.stream().forEach(task->{
             System.out.println(task.getId());

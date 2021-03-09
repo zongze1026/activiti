@@ -8,7 +8,8 @@ import lombok.Getter;
  */
 @Getter
 public enum ActivitiBusinessType {
-    LEAVE("myProcess0301", "processes/MoneryApply.bpmn", "请假审批");
+    LEAVE("multi01", "processes/multi01.bpmn", "请假审批"),
+    LEAVE02("multi02", "processes/multi02.bpmn", "请假审批");
 
 
     /**
